@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<script>
+
+    numSamples = 1000000;
+    maxValue = 10000;
+    numProcs = 4;
+    promises = new Array(numProcs);
+    total = new Array(maxValue).fill(0);
+    completedWorkers = 0;
+
+    function foo(m,x)
+    {
+        let results = new Array(x).fill(0);
+
+        for(let i = 0;i < m;i++){
+            next = Math.floor((Math.random()* Math.floor(x)));
+            results[next] += 1;
+        }
+        return results;
+    }
+    console.log("started");
+
+    function invokeAsync(f,args,worker){
+        const msg = {
+            f,
+            args
+        };
+        return new Promise(function(resolve,reject){
+            worker.postMessage(msg);
+            worker.onmessage = function (event) {
+                resolve(event.data)
+            }
+        });
+    }
+
+    for(let i = 0;i<numProcs;i++){
+        let worker = new Worker("function_worker.js");
+        promises[i] = invokeAsync(foo.toString(),[numSamples/numProcs,maxValue],worker);
+        promises[i].then(function(result){
+            let arr = result;
+            for(let i = 0;i<arr.length;i++){
+                total[i] += arr[i];
+            }
+            completedWorkers++;
+            if(completedWorkers  === 4){
+                for(let i = 0;i<total.length;i++){
+                    console.log(i + ": " + total[i]);
+                }
+            }
+        });
+    }
+</script>

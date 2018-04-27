@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<script>
+    let worker = new Worker("function_worker.js");
+
+    function foo(m, x)
+    {
+        let y = x;
+        return m * y;
+    }
+    console.log("started");
+
+    function invokeAsync(f,args){
+        const msg = {
+            f,
+            args
+        };
+        return new Promise(function(resolve,reject){
+            worker.postMessage(msg);
+            worker.onmessage = function (event) {
+                resolve(event.data)
+            }
+        });
+    }
+    p = invokeAsync(foo.toString(),[10, 5]);
+    p.then(function (result) {
+        console.log(result)
+    })
+
+
+
+</script>
