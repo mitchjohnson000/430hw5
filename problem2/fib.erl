@@ -5,10 +5,5 @@
 
 -export([fib/1]).
 
-fib(N) -> fib_con(N, 0, 1).
-
-fib_con(0, Result, _Next) -> Result;
-
-fib_con(Iter, Result, Next) when Iter > 0 ->
-
-fib_con(Iter-1, Next, Result+Next).
+fib(N) when N < 2 -> 1;
+fib(N) when N >= 2 ->fib(N-1) + fib(N-2).
