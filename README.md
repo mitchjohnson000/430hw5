@@ -1,0 +1,3 @@
+Problem 1 - Should work if ran on internet explorer or firefox, chrome sometimes doesn't like running local webworkers. Everything should print to console.
+Problem 2 - Not much to note here. I believe Steve made the skeleton code using a different version of Erlang than what I used but it should run okay.
+Problem 3 - Used the command line structure of bin,pkg,src to create. When in src simply run "go install histogram tryit" and it will compile into bin, then run the code from bin.
